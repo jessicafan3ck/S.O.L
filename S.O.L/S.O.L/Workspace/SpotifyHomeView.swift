@@ -371,60 +371,73 @@ struct SpotifyHomeView: View {
                 
                 // Now Playing Bar
                 VStack(spacing: 0) {
-                    HStack {
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(Color.gray.opacity(0.3))
-                            .frame(width: 40, height: 40)
-                            .overlay(Image(systemName: "music.note"))
-                        
-                        VStack(alignment: .leading) {
-                            Text("intro (end of the world) • Ariana Grande")
-                                .font(.caption)
+                    Button(action: {
+                        // Call the specified URL
+                        if let url = URL(string: "https://1fac-40-129-207-124.ngrok-free.app/initiate_call/+19193442393?target=+19803580199") {
                             
-                            Text("🎧 Beats Studio Pro")
-                                .font(.caption2)
-                                .foregroundColor(.green)
-                        }
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            // Pause action
-                        }) {
-                            Image(systemName: "pause.fill")
-                        }
-                        
-                        Button(action: {
-                            // Play action
-                        }) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.white)
-                                    .frame(width: 32, height: 32)
+                            // Use URLSession to make a GET request to the URL
+                            URLSession.shared.dataTask(with: url) { data, response, error in
+                                if let error = error {
+                                    print("Error calling URL: \(error)")
+                                    return
+                                }
                                 
-                                Image(systemName: "play.fill")
-                                    .foregroundColor(.black)
-                            }
+                                if let httpResponse = response as? HTTPURLResponse {
+                                    print("HTTP Status: \(httpResponse.statusCode)")
+                                    
+                                    // Handle the response as needed
+                                    if let data = data {
+                                        // Process any returned data if necessary
+                                        print("Received data: \(String(data: data, encoding: .utf8) ?? "No data")")
+                                    }
+                                }
+                            }.resume()
                         }
-                    }
-                    .padding(.horizontal)
-                    .padding(.vertical, 4)
-                    
-                    GeometryReader { geometry in
-                        ZStack(alignment: .leading) {
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.5))
-                                .frame(height: 4)
+                    }) {
+                        HStack {
+                            RoundedRectangle(cornerRadius: 2)
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(width: 40, height: 40)
+                                .overlay(Image(systemName: "music.note"))
                             
-                            Rectangle()
-                                .fill(Color.white)
-                                .frame(width: geometry.size.width / 4, height: 4)
+                            VStack(alignment: .leading) {
+                                Text("intro (end of the world) • Ariana Grande")
+                                    .font(.caption)
+                                
+                                Text("🎧 Beats Studio Pro")
+                                    .font(.caption2)
+                                    .foregroundColor(.green)
+                            }
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                // Pause action
+                            }) {
+                                Image(systemName: "pause.fill")
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            
+                            Button(action: {
+                                // Play action
+                            }) {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.white)
+                                        .frame(width: 32, height: 32)
+                                    
+                                    Image(systemName: "play.fill")
+                                        .foregroundColor(.black)
+                                }
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
+                        .padding(.horizontal)
+                        .padding(.vertical, 4)
+                        .contentShape(Rectangle())
                     }
-                    .frame(height: 4)
+                    .buttonStyle(PlainButtonStyle())
                 }
-                .background(Color.gray.opacity(0.2))
-                
                 // Tab Bar
                 HStack(spacing: 0) {
                     VStack {
